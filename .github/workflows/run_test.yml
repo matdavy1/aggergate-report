@@ -48,6 +48,6 @@ jobs:
         env:
           REGION: ap-southeast-2
         run: |
-          echo "Aggregate report: https://s3-${REGION}.amazonaws.com/env.S3_BUCKET/cucumber-results-agg-test-results.html"
-          echo "Overview report: https://s3-${REGION}.amazonaws.com/env.S3_BUCKET/overview-features.html"
+          echo "Aggregate report: https://s3-${REGION}.amazonaws.com/${env.S3_BUCKET}/cucumber-results-agg-test-results.html"
+          echo "Overview report: https://s3-${REGION}.amazonaws.com/${env.S3_BUCKET}/overview-features.html"
 
