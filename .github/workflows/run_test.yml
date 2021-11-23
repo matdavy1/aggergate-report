@@ -31,20 +31,11 @@ jobs:
           echo "REGION=ap-southeast-2" >> $GITHUB_ENV
           echo "S3_BUCKET=ctaas-enterprise-poc/${{github.repository}}/${GITHUB_REF#refs/heads/}/${{github.workflow}}/${{github.run_number}}" >> $GITHUB_ENV
 
-#      - name: AWS configure
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: env.REGION
-#
-#      - name: Upload results to S3
-#        run: |
-#          cd build/cucumber-reports/cucumber-html-reports
-#          aws s3 sync . s3://env.S3_BUCKET --no-progress --delete --exclude "html/"
-
-      - name: Log report URLs
-        run: |
-          echo "Aggregate report: https://s3-${{env.REGION}}.amazonaws.com/${{env.S3_BUCKET}}/cucumber-results-agg-test-results.html"
-          echo "Overview report: https://s3-${{env.REGION}}.amazonaws.com/${{env.S3_BUCKET}}/overview-features.html"
+      - name: Read file
+        id: package
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./build/cucumber-reports/cucumber-html-reports/overview-features.html
+        - name: Echo file
+          run: echo "${{ steps.package.outputs.content }}"
 
