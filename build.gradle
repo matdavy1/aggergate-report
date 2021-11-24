@@ -36,9 +36,14 @@ cucumberReports {
   reports = files('build/cucumber-reports/cucumber-report.json')
 }
 
-abstract class FileTask extends DefaultTask {
+abstract class ReportTask extends DefaultTask {
+
+    @Input
+    String reportUrl
+
     @TaskAction
-    def addPreviousButton() {
+    def updateReport() {
+        println(reportUrl)
         String fileContents = new File('build/cucumber-reports/cucumber-html-reports/overview-features.html').text
         new FileWriter("build/cucumber-reports/cucumber-html-reports/example.txt", true).with {
             write(fileContents)
@@ -46,7 +51,7 @@ abstract class FileTask extends DefaultTask {
         }
         String delimiter = '<li role="presentation"  class="active" ><a href="overview-features.html">Features</a></li>'
         fileContents = fileContents.replace(delimiter,
-                '<li role="presentation" ><a href="http://www.google.com">Previous results</a></li>\n' + delimiter )
+                "<li role=\"presentation\" ><a href=\"${reportUrl}\">Previous results</a></li>\n" + delimiter )
         FileWriter fWriter = new FileWriter("build/cucumber-reports/cucumber-html-reports/overview-features.html")
         BufferedWriter writer = new BufferedWriter(fWriter)
         writer.write(fileContents)
@@ -54,4 +59,6 @@ abstract class FileTask extends DefaultTask {
     }
 }
 
-tasks.register('add-previous-button', FileTask)
+task updateReport(type: ReportTask) {
+    reportUrl = project.property("reportUrl")
+}

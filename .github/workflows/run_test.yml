@@ -31,12 +31,9 @@ jobs:
           echo "REGION=ap-southeast-2" >> $GITHUB_ENV
           echo "S3_BUCKET=ctaas-enterprise-poc/${{github.repository}}/${GITHUB_REF#refs/heads/}/${{github.workflow}}/${{github.run_number}}" >> $GITHUB_ENV
 
-      - name: Read file
-        id: package
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./build/cucumber-reports/cucumber-html-reports/test.txt
+      - name: Update report
+        run: gradle -PreportUrl=env.S3_BUCKET updateReport
 
-      - name: Echo file
-        run: echo "${{ steps.package.outputs.content }}"
+#      - name: Echo file
+#        run: echo "${{ steps.package.outputs.content }}"
 
