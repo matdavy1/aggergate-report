@@ -32,7 +32,7 @@ jobs:
           echo "S3_BUCKET=ctaas-enterprise-poc/${{github.repository}}/${GITHUB_REF#refs/heads/}/${{github.workflow}}/${{github.run_number}}" >> $GITHUB_ENV
 
       - name: Update report
-        run: gradle -PreportUrl=env.S3_BUCKET updateReport
+        run: gradle updateReport --reportUrl=env.S3_BUCKET
 
 #      - name: Echo file
 #        run: echo "${{ steps.package.outputs.content }}"

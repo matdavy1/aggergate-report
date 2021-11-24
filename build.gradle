@@ -38,9 +38,16 @@ cucumberReports {
 
 abstract class ReportTask extends DefaultTask {
 
-    @Input
-    String reportUrl
+    private String reportUrl;
 
+    @Option(option = "reportUrl", description = "Configures the URL to be verified.")
+    public void setUrl(String reportUrl) {
+        this.reportUrl = reportUrl;
+    }
+    @Input
+    public String getUrl() {
+        return reportUrl;
+    }
     @TaskAction
     def updateReport() {
         println(reportUrl)
@@ -59,6 +66,4 @@ abstract class ReportTask extends DefaultTask {
     }
 }
 
-task updateReport(type: ReportTask) {
-    reportUrl = project.property("reportUrl")
-}
+tasks.register('updateReport', ReportTask)
