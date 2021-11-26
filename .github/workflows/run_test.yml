@@ -32,8 +32,7 @@ jobs:
       - name: Update reports
         run: |
           echo "BASE_REPORT_URL=https://s3-${{env.REGION}}.amazonaws.com/${{env.S3_BUCKET}}" >> $GITHUB_ENV
-#           echo "REGION=ap-southeast-2" >> $GITHUB_ENV
-#          gradle updateReports --reportUrl=${{ env.REGION }}
+          gradle updateReports --reportUrl=${{ env.BASE_REPORT_URL }}
 
 #      - name: AWS configure
 #        uses: aws-actions/configure-aws-credentials@v1
