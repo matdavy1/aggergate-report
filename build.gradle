@@ -1,4 +1,4 @@
-aapply plugin: 'java'
+apply plugin: 'java'
 apply plugin: "com.github.spacialcircumstances.gradle-cucumber-reporting"
 
 
