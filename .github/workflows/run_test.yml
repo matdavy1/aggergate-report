@@ -2,7 +2,7 @@ name: XIAMS_PIV
 
 on:
   push:
-    branches: [agg-report]
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -12,6 +12,9 @@ jobs:
   build:
     name: "Build"
     runs-on: ubuntu-latest
+    env:
+      REGION: "ap-southeast-2"
+      S3_BUCKET: "ctaas-enterprise-poc/${{github.repository}}/${{github.workflow}}/${{github.run_number}}"
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -26,14 +29,26 @@ jobs:
         run: chmod +x gradlew && ./gradlew test
         continue-on-error: true
 
-      - name: Set environment variables
+      - name: Update reports
         run: |
-          echo "REGION=ap-southeast-2" >> $GITHUB_ENV
-          echo "S3_BUCKET=ctaas-enterprise-poc/${{github.repository}}/${GITHUB_REF#refs/heads/}/${{github.workflow}}/${{github.run_number}}" >> $GITHUB_ENV
+          echo "BASE_REPORT_URL=https://s3" >> $GITHUB_ENV
+          gradle updateReports --reportUrl=${{ env.BASE_REPORT_URL }}
 
-      - name: Update report
-        run: gradle updateReport --reportUrl=env.S3_BUCKET
-
-#      - name: Echo file
-#        run: echo "${{ steps.package.outputs.content }}"
-
+#      - name: AWS configure
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ env.REGION }}
+#
+#      - name: Upload results to S3
+#        run: |
+#          cd build/cucumber-reports/cucumber-html-reports
+#          aws s3 sync . s3://${{ env.S3_BUCKET }} --no-progress --delete --exclude "html/"
+#
+      - name: Log report URLs
+        run: |
+          echo "Aggregate report: ${{ env.BASE_REPORT_URL }}/cucumber-results-agg-test-results.html"
+          echo "Overview report: ${{ env.BASE_REPORT_URL }}/overview-features.html"
+#
+#
